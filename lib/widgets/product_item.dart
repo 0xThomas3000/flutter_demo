@@ -18,13 +18,13 @@ class ProductItem extends StatelessWidget {
           backgroundColor: Colors.black87,
           leading: Consumer<Product>(
             builder: (ctx, product, _) => IconButton(
-              icon: product.isFavorite 
-                ? const Icon(
-                    Icons.favorite,
-                  )
-                : const Icon(
-                    Icons.favorite_border,
-                  ),
+              icon: product.isFavorite
+                  ? const Icon(
+                      Icons.favorite,
+                    )
+                  : const Icon(
+                      Icons.favorite_border,
+                    ),
               color: Theme.of(context).colorScheme.secondary,
               onPressed: () {
                 product.toggleFavoriteStatus();
