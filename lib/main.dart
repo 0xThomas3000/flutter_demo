@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import './screens/product_detail_screen.dart';
 import './screens/cart_screen.dart';
 import './screens/products_overview_screen.dart';
 import './providers/products.dart';
 import './providers/cart.dart';
+import './screens/orders_screen.dart';
 
 void main() => runApp(MyApp());
 
@@ -23,9 +25,9 @@ class MyApp extends StatelessWidget {
         title: 'Practising Flutter',
         theme: ThemeData(
           fontFamily: 'Lato',
-          primarySwatch: Colors.pink,
+          primarySwatch: Colors.purple,
           colorScheme: ColorScheme.fromSwatch(
-            primarySwatch: Colors.pink,
+            primarySwatch: Colors.purple,
             accentColor: Colors.deepOrange,
             errorColor: Colors.red,
           ),
@@ -33,6 +35,8 @@ class MyApp extends StatelessWidget {
         home: ProductsOverviewScreen(),
         routes: {
           CartScreen.routeName: (ctx) => CartScreen(),
+          OrdersScreen.routeName: (ctx) => OrdersScreen(),
+          ProductDetail.routeName: (ctx) => ProductDetail(),
         },
       ),
     );
