@@ -49,4 +49,35 @@ class Products with ChangeNotifier {
   Product findById(String id) {
     return _items.firstWhere((prod) => prod.id == id);
   }
+
+  /* Add a new product into the current list of products */
+  void addProduct(Product product) {
+    final newProduct = Product(
+      title: product.title,
+      description: product.description,
+      price: product.price,
+      imageUrl: product.imageUrl,
+      id: DateTime.now().toString(),
+    );
+    _items.add(newProduct);
+    // _items.insert(0, newProduct); // at the start of the list
+    notifyListeners(); // Notify widget classes listening to this class about changes in "_items" to be rebuilt
+  }
+
+  /* Edit and update the information about the selected product */
+  void updateProduct(String id, Product newProduct) {
+    final prodIndex = _items.indexWhere((prod) => prod.id.toString() == id);
+    if (prodIndex >= 0) {
+      _items[prodIndex] = newProduct;
+      notifyListeners();
+    } else {
+      print('...');
+    }
+  }
+
+  /* Delete a specific product based on an product-id provided by someone */
+  void deleteProduct(String id) {
+    _items.removeWhere((prod) => prod.id.toString() == id);
+    notifyListeners();
+  }
 }

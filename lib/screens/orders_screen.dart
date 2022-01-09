@@ -15,10 +15,17 @@ class OrdersScreen extends StatelessWidget {
         title: const Text('Your Orders'),
       ),
       drawer: AppDrawer(),
-      body: ListView.builder(
-        itemCount: orders.length,
-        itemBuilder: (ctx, index) => OrderItem(orders[index]),
-      ),
+      body: orders.isEmpty
+          ? const Center(
+              child: Text(
+                'No orders found !!!',
+                style: TextStyle(fontSize: 15),
+              ),
+            )
+          : ListView.builder(
+              itemCount: orders.length,
+              itemBuilder: (ctx, index) => OrderItem(orders[index]),
+            ),
     );
   }
 }
