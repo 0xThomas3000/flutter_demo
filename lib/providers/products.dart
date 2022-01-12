@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
 import './product.dart';
 
 class Products with ChangeNotifier {
@@ -51,17 +53,44 @@ class Products with ChangeNotifier {
   }
 
   /* Add a new product into the current list of products */
-  void addProduct(Product product) {
-    final newProduct = Product(
-      title: product.title,
-      description: product.description,
-      price: product.price,
-      imageUrl: product.imageUrl,
-      id: DateTime.now().toString(),
-    );
-    _items.add(newProduct);
-    // _items.insert(0, newProduct); // at the start of the list
-    notifyListeners(); // Notify widget classes listening to this class about changes in "_items" to be rebuilt
+  Future<void> addProduct(Product product) {
+    final url = Uri.parse(
+        'https://flutter-demo-7218c-default-rtdb.asia-southeast1.firebasedatabase.app/products.json');
+    return http
+        .post(
+      url,
+      body: json.encode(
+        {
+          'title': product.title,
+          'description': product.description,
+          'imageUrl': product.imageUrl,
+          'price': product.price,
+          'isFavorite': product.isFavorite,
+        },
+      ),
+    )
+        .then((response) {
+      // we register some code with "then" that should execute when that future resolves, but then itself returns another future.
+      print(json.decode(response.body));
+
+      final newProduct = Product(
+        title: product.title,
+        description: product.description,
+        price: product.price,
+        imageUrl: product.imageUrl,
+        id: json.decode(response.body)[
+            'name'], // We work with a perfect copy of what we have on the back-end.
+      );
+      _items.add(newProduct);
+      // _items.insert(0, newProduct); // at the start of the list
+      notifyListeners(); // Notify widget classes listening to this class about changes in "_items" to be rebuilt
+    }).catchError((error) {
+      // Defines a function that receives an error
+      print(error);
+      // Throw that error we received again, and now create a new error based on the previous error obj
+      throw (error); // Do this as we want to add a newer "catch" error clause in another place (edit_product_screen)
+    });
+    //return Future.value(); // Problem: instantly return => too early, not really work so we need to find another solution.
   }
 
   /* Edit and update the information about the selected product */
