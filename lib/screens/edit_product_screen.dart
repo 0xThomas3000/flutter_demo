@@ -105,7 +105,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
   // We can trigger it through the form key, when we save the form, then we can also call _form.currentState validate,
   // and this will trigger all the validators and this will return true if there's no errors. So if they all return null
   // and will return false if at least one validator returns a string and hence has an error.
-  void _saveForm() {
+  void _saveForm() async {
     final isValid = _form.currentState!
         .validate(); // Trigger all validators, then return true/false
     if (!isValid) {
@@ -124,11 +124,15 @@ class _EditProductScreenState extends State<EditProductScreen> {
       });
       Navigator.of(context).pop(); // Sending a pop request
     } else {
-      Provider.of<Products>(context, listen: false).addProduct(_editedProduct)
-          // Catch error is reached if there's an error, but only the first catchError inline will execute then
-          .catchError((error) {
+      try {
+        await Provider.of<Products>(context, listen: false)
+            .addProduct(_editedProduct);
+        // Catch error is reached if there's an error, but only the first catchError inline will execute then
+      } catch (error) {
         // this error will be reached because we're throwing "error" inside "Products.dart" again.
-        return showDialog<Null>(
+        await showDialog<Null>(
+          // returns a "Future" that resolves as soon as the user presses the "Okay" button
+          // => so we wanna "await" for the result before going to the "finally" statement.
           context: context,
           builder: (ctx) => AlertDialog(
             title: const Text('An error occurred'),
@@ -143,15 +147,15 @@ class _EditProductScreenState extends State<EditProductScreen> {
             ],
           ),
         );
-      }).then((_) {
-        // will be triggered once that error is handled (once the dialog was closed)
+      } finally {
+        // This "finally" code always runs no matter if we succeed or fail.
         setState(() {
           _isLoading = false;
         });
         // Leave the page after finish (only pop once we're done with HTTP requests or once this was stored)
         // For the response to have arrived before we call pop.
         Navigator.of(context).pop(); // Sending a pop request
-      });
+      }
     }
   }
 
