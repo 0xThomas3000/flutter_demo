@@ -117,12 +117,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
       _isLoading = true; // want to reflect this change on the UI
     });
     if (_editedProduct.id != null) {
-      Provider.of<Products>(context, listen: false)
+      await Provider.of<Products>(context, listen: false)
           .updateProduct(_editedProduct.id.toString(), _editedProduct);
-      setState(() {
-        _isLoading = false;
-      });
-      Navigator.of(context).pop(); // Sending a pop request
     } else {
       try {
         await Provider.of<Products>(context, listen: false)
@@ -147,16 +143,12 @@ class _EditProductScreenState extends State<EditProductScreen> {
             ],
           ),
         );
-      } finally {
-        // This "finally" code always runs no matter if we succeed or fail.
-        setState(() {
-          _isLoading = false;
-        });
-        // Leave the page after finish (only pop once we're done with HTTP requests or once this was stored)
-        // For the response to have arrived before we call pop.
-        Navigator.of(context).pop(); // Sending a pop request
       }
     }
+    setState(() {
+      _isLoading = false;
+    });
+    Navigator.of(context).pop();
   }
 
   @override
