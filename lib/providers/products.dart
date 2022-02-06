@@ -156,7 +156,7 @@ class Products with ChangeNotifier {
    */
   void deleteProduct(String id) {
     final url = Uri.parse(
-        'https://flutter-demo-7218c-default-rtdb.asia-southeast1.firebasedatabase.app/products/$id');
+        'https://flutter-demo-7218c-default-rtdb.asia-southeast1.firebasedatabase.app/products/$id.json');
     // Before we remove my item here and actually start sending the request, therefore just to be safe,
     // we'll copy it => create a new final variable which is existingProduct
     final existingProductIndex = _items.indexWhere((prod) =>
@@ -179,7 +179,8 @@ class Products with ChangeNotifier {
       // Normally, for GET and POST, the HTTP package would have thrown an error and our code here would've been kicked off.
       if (response.statusCode >= 400) // Want to throw our own errors.
       {
-        throw HttpException('Could not delete product.');
+        throw HttpException(
+            'Could not delete product.'); // Since we're throwing this, we should now make it into catchError, so now we should restore that.
         //throw Exception(); // Not recommend to directly use it. Instead, we should build our own exception based on that Exception class here.
       }
       existingProduct =
