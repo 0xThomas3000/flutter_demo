@@ -58,7 +58,7 @@ class Products with ChangeNotifier {
         'https://flutter-demo-7218c-default-rtdb.asia-southeast1.firebasedatabase.app/products.json');
     try {
       final response = await http.get(url);
-      final extractedData = json.decode(response.body) as Map<String, dynamic>;
+      final extractedData = json.decode(response.body)! as Map<String, dynamic>;
       final List<Product> loadedProducts = [];
       // execute a function on every entry in that map (on the outer map/on every unique ID we have)
       extractedData.forEach((prodId, prodData) {
